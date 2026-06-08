@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "Laptop Lenovo",
+    "price": 1200,
+    "stock": 10
+  },
+  {
+    "id": 2,
+    "name": "Mouse Logitech",
+    "price": 25,
+    "stock": 50
+  },
+  {
+    "name": "Teclado Mecánico",
+    "price": 80,
+    "stock": 20,
+    "id": 3
+  }
+]

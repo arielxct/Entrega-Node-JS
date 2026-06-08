@@ -1,0 +1,17 @@
+{
+  "name": "ejercicio-14",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2",
+    "dotenv": "^17.4.2",
+    "firebase-admin": "^13.10.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
