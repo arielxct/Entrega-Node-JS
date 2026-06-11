@@ -1,0 +1,79 @@
+{
+  "info": {
+    "name": "Proyecto NodeJS - API Users",
+    "_postman_id": "users-collection-002",
+    "description": "Colección para probar endpoints de usuarios con JWT y Firestore",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/auth/login"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"campostula@gmail.com\",\n  \"password\": \"MiPostHombre26\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Usuarios - Listar",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/users"
+        }
+      }
+    },
+    {
+      "name": "Usuarios - Obtener por ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/users/abc123"
+        }
+      }
+    },
+    {
+      "name": "Usuarios - Crear",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/users/create"
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Juan Pérez\",\n  \"email\": \"juanperez@example.com\",\n  \"role\": \"admin\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Usuarios - Eliminar",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/users/abc123"
+        }
+      }
+    }
+  ]
+}

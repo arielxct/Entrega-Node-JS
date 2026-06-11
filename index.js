@@ -7,6 +7,9 @@ import productRoutes from './routes/products.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import userRoutes from './routes/users.routes.js';
 
+
+
+
 dotenv.config();
 
 const app = express();
@@ -14,9 +17,19 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Usar las rutas
-app.use(productRoutes);
-app.use(authRoutes);
-app.use(userRoutes);
+// app.use(productRoutes);
+// app.use(authRoutes);
+// app.use(userRoutes);
+
+app.use('/api/products', productRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+
+
+
+
+
+
 
 // Middleware para rutas desconocidas
 app.use((req, res) => {
