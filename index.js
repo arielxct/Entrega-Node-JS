@@ -25,7 +25,9 @@ app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 
-module.exports = app;
+//module.exports = app;
+// Exportar la app para Vercel en modo ES Modules
+export default app;
 
 
 
