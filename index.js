@@ -25,7 +25,7 @@ admin.initializeApp({
 const db = admin.firestore();
 
 // Ruta GET: obtener usuarios
-app.get("/api/users", async (req, res) => {
+app.get("/users", async (req, res) => {
   try {
     const snapshot = await db.collection("users").get();
     const users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -37,7 +37,7 @@ app.get("/api/users", async (req, res) => {
 });
 
 // Ruta POST: crear usuario
-app.post("/api/users/create", async (req, res) => {
+app.post("/users/create", async (req, res) => {
   try {
     const user = req.body;
     await db.collection("users").doc(user.id.toString()).set(user);
@@ -49,7 +49,7 @@ app.post("/api/users/create", async (req, res) => {
 });
 
 // Ruta POST: login con JWT
-app.post("/api/login", (req, res) => {
+app.post("/login", (req, res) => {
   const { username } = req.body;
   if (!username) {
     return res.status(400).json({ error: "Falta username" });
@@ -58,7 +58,7 @@ app.post("/api/login", (req, res) => {
     const token = jwt.sign({ username }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
     res.json({ token });
   } catch (error) {
-    console.error("Error en POST /api/login:", error);
+    console.error("Error en POST /login:", error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -71,6 +71,8 @@ if (process.env.NODE_ENV !== "production") {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
   });
 }
+
+
 
 // Exportar para Vercel
 export default app;
