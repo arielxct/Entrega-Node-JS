@@ -3,44 +3,22 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
+// Importar tus rutas
 import productRoutes from './routes/products.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import userRoutes from './routes/users.routes.js';
 
-
-
-
+// Cargar variables de entorno
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Usar las rutas
-// app.use(productRoutes);
-// app.use(authRoutes);
-// app.use(userRoutes);
-
+// Usar las rutas con prefijo /api
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-
-//module.exports = app;
-// Exportar la app para Vercel en modo ES Modules
-const PORT = process.env.PORT || 3000;
-
-if (process.env.NODE_ENV !== "production") {
-  app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-  });
-}
-
-export default app;
-
-
-
-
-
 
 // Middleware para rutas desconocidas
 app.use((req, res) => {
@@ -53,8 +31,13 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Error interno del servidor' });
 });
 
-// Servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-});
+// 🚀 Servidor en local (Postman)
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  });
+}
+
+// Exportar la app para Vercel (modo ES Modules)
+export default app;
