@@ -1,6 +1,6 @@
 import express from "express";
 import jwt from "jsonwebtoken";
-import db from "../firebase.js";
+import db from "../config/firebase.js"; // ✅ ahora apunta a config/firebase.js
 
 const router = express.Router();
 
@@ -28,6 +28,11 @@ router.post("/login", async (req, res) => {
     }
 
     // Generar token JWT
+    if (!process.env.JWT_SECRET_KEY) {
+      console.error("JWT_SECRET_KEY no está definido en las variables de entorno");
+      return res.status(500).json({ error: "Configuración inválida del servidor" });
+    }
+
     const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
     console.log("Token generado correctamente para:", email);
 
