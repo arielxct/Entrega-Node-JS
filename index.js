@@ -64,4 +64,15 @@ app.post("/api/login", (req, res) => {
 });
 
 // Exportar la app para Vercel en modo ES Modules
+// Al final de tu index.js
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  });
+}
+
+// Exportar para Vercel
 export default app;
+
+
