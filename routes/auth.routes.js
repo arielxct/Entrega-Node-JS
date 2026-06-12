@@ -1,46 +1,8 @@
-import express from "express";
-import jwt from "jsonwebtoken";
-import db from "../config/firebase.js"; // ✅ ahora apunta a config/firebase.js
+import express from 'express';
+import { login } from '../controllers/AuthController.js';
 
 const router = express.Router();
 
-// Ruta de login con logs de depuración
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  console.log("Login request recibido:", email);
-
-  try {
-    // Buscar usuario en Firestore
-    const snapshot = await db.collection("users").where("email", "==", email).get();
-
-    if (snapshot.empty) {
-      console.error("Usuario no encontrado:", email);
-      return res.status(401).json({ error: "Usuario no encontrado" });
-    }
-
-    const userData = snapshot.docs[0].data();
-    console.log("Datos de usuario encontrados:", userData);
-
-    // Validar contraseña (ejemplo simple, sin hash)
-    if (userData.password !== password) {
-      console.error("Contraseña incorrecta para:", email);
-      return res.status(401).json({ error: "Contraseña incorrecta" });
-    }
-
-    // Generar token JWT
-    if (!process.env.JWT_SECRET_KEY) {
-      console.error("JWT_SECRET_KEY no está definido en las variables de entorno");
-      return res.status(500).json({ error: "Configuración inválida del servidor" });
-    }
-
-    const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
-    console.log("Token generado correctamente para:", email);
-
-    return res.json({ token });
-  } catch (err) {
-    console.error("Error en login:", err);
-    return res.status(500).json({ error: "Error interno" });
-  }
-});
+router.post('/login', login);
 
 export default router;
