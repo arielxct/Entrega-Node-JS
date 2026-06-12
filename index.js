@@ -1,53 +1,62 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import dotenv from 'dotenv';
-
-import productRoutes from './routes/products.routes.js';
-import authRoutes from './routes/auth.routes.js';
-import userRoutes from './routes/users.routes.js';
-
-
-
-
-dotenv.config();
+import express from "express";
+import cors from "cors";
+import admin from "firebase-admin";
+import jwt from "jsonwebtoken";
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
-// Usar las rutas
-// app.use(productRoutes);
-// app.use(authRoutes);
-// app.use(userRoutes);
+// Inicializar Firebase Admin con variables de entorno
+admin.initializeApp({
+  credential: admin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    // Importante: reemplazar los saltos de línea escapados en la clave privada
+    privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+  })
+});
 
-app.use('/api/products', productRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
+const db = admin.firestore();
 
-//module.exports = app;
+// Ruta GET: obtener usuarios
+app.get("/api/users", async (req, res) => {
+  try {
+    const snapshot = await db.collection("users").get();
+    const users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    res.json(users);
+  } catch (error) {
+    console.error("Error en GET /api/users:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Ruta POST: crear usuario
+app.post("/api/users/create", async (req, res) => {
+  try {
+    const user = req.body;
+    await db.collection("users").doc(user.id.toString()).set(user);
+    res.json({ message: "Usuario agregado", user });
+  } catch (error) {
+    console.error("Error en POST /api/users/create:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Ruta POST: login con JWT
+app.post("/api/login", (req, res) => {
+  const { username } = req.body;
+  if (!username) {
+    return res.status(400).json({ error: "Falta username" });
+  }
+  try {
+    const token = jwt.sign({ username }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
+    res.json({ token });
+  } catch (error) {
+    console.error("Error en POST /api/login:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Exportar la app para Vercel en modo ES Modules
 export default app;
-
-
-
-
-
-
-
-// Middleware para rutas desconocidas
-app.use((req, res) => {
-  res.status(404).json({ message: 'Ruta no encontrada' });
-});
-
-// Middleware de manejo de errores global
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Error interno del servidor' });
-});
-
-// Servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-});
