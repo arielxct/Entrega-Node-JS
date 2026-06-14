@@ -1,21 +1,32 @@
 import jwt from 'jsonwebtoken';
 
 function authMiddleware(req, res, next) {
-  const authHeader = req.headers['authorization'];
+
+  const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    return res.status(401).json({ message: 'Token no proporcionado' });
+    return res.status(401).json({
+      message: 'Token no proporcionado'
+    });
   }
 
   const token = authHeader.split(' ')[1];
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      return res.status(403).json({ message: 'Token inválido o expirado' });
+  jwt.verify(
+    token,
+    process.env.JWT_SECRET,
+    (err, user) => {
+
+      if (err) {
+        return res.status(403).json({
+          message: 'Token inválido o expirado'
+        });
+      }
+
+      req.user = user;
+      next();
     }
-    req.user = user;
-    next();
-  });
+  );
 }
 
 export default authMiddleware;
