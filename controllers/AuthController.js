@@ -12,6 +12,8 @@ export const login = (req, res) => {
     );
     res.json({ token });
   } else {
-    res.status(401).json({ message: 'Credenciales inválidas' });
+    res.status(401).json({ message: 'Credenciales inválidas en mi proyecto' });
   }
 };
+// agrego para verificar que la variable de entorno JWT_SECRET esté correctamente configurada
+console.log("JWT_SECRET:", process.env.JWT_SECRET);
